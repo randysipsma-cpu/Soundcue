@@ -65,5 +65,10 @@ window.addEventListener('resize',refreshAppLayout);
 document.addEventListener('dblclick',e=>{if(e.target.closest('button,.pad,.board,.top,.bottom'))e.preventDefault()},{passive:false});
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Soundcue offline registratie mislukt',err));
+  });
+}
 initMediaSession();render();hydrate();
 </script></body></html>
