@@ -66,8 +66,26 @@ document.addEventListener('dblclick',e=>{if(e.target.closest('button,.pad,.board
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
 if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Soundcue offline registratie mislukt',err));
+  window.addEventListener('load',async()=>{
+    try{
+      const registration=await navigator.serviceWorker.register('./service-worker.js',{updateViaCache:'none'});
+      await registration.update();
+      await navigator.serviceWorker.ready;
+      const worker=navigator.serviceWorker.controller||registration.active;
+      if(worker){
+        const onStatus=event=>{
+          if(event.data?.type!=='SOUNDCUE_OFFLINE_STATUS')return;
+          navigator.serviceWorker.removeEventListener('message',onStatus);
+          if(event.data.ready)toast('Soundcue is klaar voor offline gebruik');
+          else toast('Offline bestanden worden nog opgeslagen');
+        };
+        navigator.serviceWorker.addEventListener('message',onStatus);
+        worker.postMessage({type:'SOUNDCUE_OFFLINE_STATUS'});
+      }
+    }catch(err){
+      console.warn('Soundcue offline registratie mislukt',err);
+      toast('Offline modus nog niet beschikbaar');
+    }
   });
 }
 initMediaSession();render();hydrate();
