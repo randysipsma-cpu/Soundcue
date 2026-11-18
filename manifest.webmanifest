@@ -1,0 +1,20 @@
+{
+  "name": "Soundcue",
+  "short_name": "Soundcue",
+  "description": "Cue-board voor orkestbanden",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#101015",
+  "theme_color": "#19191f",
+  "orientation": "any",
+  "lang": "nl",
+  "icons": [
+    {
+      "src": "./soundcue-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
